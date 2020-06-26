@@ -36,8 +36,8 @@ class AppServiceProvider extends ServiceProvider
            }, 100);
            */
 
-           //$sendVerification= new TwilioController();
-           //$sendVerification->sendCode('+234'.$user->phone);
+           $sendVerification= new TwilioController();
+           $sendVerification->sendCode('+234'.$user->phone);
 
         });
         //
