@@ -91,11 +91,10 @@ class UserController extends BaseController
 
         $client = User::create($data);
         $data=array(
-            'phone'=>$client->phone,
-            'user_id'=>$client->id,
+            'user'=>$client,
             'status'=>200,
         );
-        return $this->saves($data);
+        return $this->saves($client);
 
     }
 
@@ -137,6 +136,8 @@ class UserController extends BaseController
             $user->phone_verified_at=time();
             $user->save();
             return $this->showMessage('The account has been verified successfully');
+        }else{
+            return $this->errorResponse('invalid code', 401);
         }
 
     }
