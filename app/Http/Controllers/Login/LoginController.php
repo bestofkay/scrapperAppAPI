@@ -20,7 +20,7 @@ class LoginController extends BaseController
             $users= User::findOrFail($user->id);
            // $user=Auth::create();
             $success['token'] =  $user->createToken('myToken')->accessToken;
-             $success['user_id'] =  $user->id;
+             $success['user'] =  $users;
              $success['expiration'] =  strtotime(Carbon::now()->addDays(1));
              $data=array(
                  'token'=>$success,
