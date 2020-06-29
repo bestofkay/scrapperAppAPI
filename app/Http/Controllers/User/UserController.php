@@ -82,8 +82,8 @@ class UserController extends BaseController
         //dd($request); exit;
         $foo = new User();
        // $request->validate($rules);
-       $user= User::where('email', $request->email)->find();
-       $phone= User::where('phone', $request->phone)->find();
+       $user= User::where('email', $request->email)->get();
+       $phone= User::where('phone', $request->phone)->get();
        if(empty($user) && empty($phone)){
         $data = $request->all();
         $data['password']= bcrypt($request->password);
@@ -119,7 +119,7 @@ class UserController extends BaseController
 
     public function verify($token)
     {
-        $user= User::where('activation_code', strtoupper($token));
+        $user= User::where('activation_code', strtoupper($token))->get();
         if(!empty($user)){
             $user->account_verified=User::VERIFIED_USER;
             $user->activation_code=null;
