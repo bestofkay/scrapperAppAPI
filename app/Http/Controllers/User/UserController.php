@@ -18,7 +18,7 @@ class UserController extends BaseController
     public function __construct()
     {
         //$this->middleware('client_credentials')->only(['store']);
-        $this->middleware('auth:api')->except(['register','verify','index','forget_password','verify_phone']);
+        $this->middleware('auth:api')->except(['register','verify','index','forget_password','verify_phone','destroy']);
        // $this->middleware('auth:api');
     }
     public function index()
@@ -139,6 +139,14 @@ class UserController extends BaseController
         }else{
             return $this->errorResponse('invalid code', 401);
         }
+
+    }
+
+    public function destroy($id)
+    {
+        $client=User::findOrFail($id);
+        $client->delete();
+        return response()->json(['data'=>$client], 200);
 
     }
 
