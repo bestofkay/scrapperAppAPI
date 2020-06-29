@@ -90,7 +90,7 @@ class UserController extends BaseController
         $data['phone_code']= '+234';
         $data['account_verified'] = User::UNVERIFIED_USER;
         $data['status'] = User::INACTIVE;
-        $data['activation_code'] = '008917';
+        $data['activation_code'] = $this->getName(6);
         $data['is_admin'] = User::IS_ADMIN;
         $data['country'] ='Nigeria';
 
@@ -120,12 +120,17 @@ class UserController extends BaseController
 
     public function verify($token)
     {
-        $user= User::where('activation_code', $token)->firstOrfail();
-        $user->account_verified=User::VERIFIED_USER;
-        $user->activation_code=null;
-        $user->email_verified_at=time();
-        $user->save();
-        return $this->showMessage('The account has been verified successfully');
+        $user= User::where('activation_code', strtoupper($token));
+        if(!empty($user)){
+            $user->account_verified=User::VERIFIED_USER;
+            $user->activation_code=null;
+            $user->email_verified_at=time();
+            $user->save();
+            return $this->showMessage('The account has been verified successfully');
+        }else{
+            return $this->errorResponse('Wrong code entered!', 401);
+        }
+
     }
 
     public function verify_phone(Request $request)
@@ -149,6 +154,17 @@ class UserController extends BaseController
         }
 
     }
+
+
+public function getName($sixdigit) {
+        $total_characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $sixdigit; $i++) {
+        $index = rand(0, strlen($total_characters) - 1);
+        $randomString .= $total_characters[$index];
+        }
+        return strtoupper($randomString);
+        }
 
     public function destroy($id)
     {
