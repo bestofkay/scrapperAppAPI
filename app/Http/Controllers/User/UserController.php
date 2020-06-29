@@ -70,7 +70,6 @@ class UserController extends BaseController
 
     public function register(Request $request)
     {
-        /*
         $rules=[
             'first_name'=>'required',
             'last_name'=> 'required',
@@ -78,13 +77,9 @@ class UserController extends BaseController
             'phone'=>'unique:users|required',
             'password'=> 'required|min:6',
         ];
-        */
         //dd($request); exit;
         $foo = new User();
-       // $request->validate($rules);
-       $user= User::where('email', $request->email)->get();
-       $phone= User::where('phone', $request->phone)->get();
-       if(empty($user) && empty($phone)){
+        $request->validate($rules);
         $data = $request->all();
         $data['password']= bcrypt($request->password);
         $data['phone_code']= '+234';
@@ -99,11 +94,19 @@ class UserController extends BaseController
             'user'=>$client,
         );
         return $this->saves($data);
-       }else{
-        return $this->errorResponse('User already exist!', 401);
-       }
 
     }
+
+    public function getName($sixdigit) {
+
+        $total_characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $sixdigit; $i++) {
+        $index = rand(0, strlen($total_characters) - 1);
+        $randomString .= $total_characters[$index];
+        }
+        return $randomString;
+        }
 
     /**
      * Display the specified resource.
@@ -119,17 +122,12 @@ class UserController extends BaseController
 
     public function verify($token)
     {
-        $user= User::where('activation_code', strtoupper($token))->get();
-        if(!empty($user)){
-            $user->account_verified=User::VERIFIED_USER;
-            $user->activation_code=null;
-            $user->email_verified_at=time();
-            $user->save();
-            return $this->showMessage('The account has been verified successfully');
-        }else{
-            return $this->errorResponse('Wrong code entered!', 401);
-        }
-
+        $user= User::where('activation_code', $token)->firstOrfail();
+        $user->account_verified=User::VERIFIED_USER;
+        $user->activation_code=null;
+        $user->email_verified_at=time();
+        $user->save();
+        return $this->showMessage('The account has been verified successfully');
     }
 
     public function verify_phone(Request $request)
@@ -153,17 +151,6 @@ class UserController extends BaseController
         }
 
     }
-
-
-public function getName($sixdigit) {
-        $total_characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-        for ($i = 0; $i < $sixdigit; $i++) {
-        $index = rand(0, strlen($total_characters) - 1);
-        $randomString .= $total_characters[$index];
-        }
-        return strtoupper($randomString);
-        }
 
     public function destroy($id)
     {
