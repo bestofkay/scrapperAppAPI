@@ -26,7 +26,8 @@ class LoginController extends BaseController
                  'token'=>$success,
                  'data'=>'User login successfully'
              );
-             return response()->json($data, 200);
+             return response()->json([$data, 'status'=>true, 'code'=>200]);
+
             }
         else{
             return $this->errorResponse('Invalid username/password', 401);
