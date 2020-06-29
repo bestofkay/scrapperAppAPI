@@ -82,8 +82,8 @@ class UserController extends BaseController
         //dd($request); exit;
         $foo = new User();
        // $request->validate($rules);
-       $user= User::where('email', $request->email);
-       $phone= User::where('phone', $request->phone);
+       $user= User::where('email', $request->email)->find();
+       $phone= User::where('phone', $request->phone)->find();
        if(empty($user) && empty($phone)){
         $data = $request->all();
         $data['password']= bcrypt($request->password);
