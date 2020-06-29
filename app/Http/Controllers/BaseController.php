@@ -15,7 +15,7 @@ class BaseController extends Controller
     private function successResponse($data, $code)
 
     {
-        return response()->json([$data, 'status'=>true], $code);
+        return response()->json([$data, 'status'=>true, 'code'=>$code], $code);
 
     }
 
