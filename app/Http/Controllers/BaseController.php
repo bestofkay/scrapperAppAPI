@@ -41,7 +41,7 @@ class BaseController extends Controller
     }
 
     protected function saves($array, $code=201){
-        return $this->successResponse($array, $code);
+        return $this->successResponse(['user'=>$array], $code);
     }
 
     protected function showMessage($message, $code=201){

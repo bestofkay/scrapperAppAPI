@@ -90,10 +90,7 @@ class UserController extends BaseController
         $data['country'] ='Nigeria';
 
         $client = User::create($data);
-        $data=array(
-            'user'=>$client,
-        );
-        return $this->saves($data);
+        return $this->saves($client);
 
     }
 
