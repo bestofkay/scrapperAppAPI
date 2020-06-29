@@ -70,6 +70,7 @@ class UserController extends BaseController
 
     public function register(Request $request)
     {
+        /*
         $rules=[
             'first_name'=>'required',
             'last_name'=> 'required',
@@ -77,24 +78,31 @@ class UserController extends BaseController
             'phone'=>'unique:users|required',
             'password'=> 'required|min:6',
         ];
+        */
         //dd($request); exit;
         $foo = new User();
-        $request->validate($rules);
+       // $request->validate($rules);
+       $user= User::where('email', $request->email);
+       $phone= User::where('phone', $request->phone);
+       if(empty($user) && empty($phone)){
         $data = $request->all();
         $data['password']= bcrypt($request->password);
         $data['phone_code']= '+234';
         $data['account_verified'] = User::UNVERIFIED_USER;
         $data['status'] = User::INACTIVE;
-        $data['activation_code'] = $foo->generateActivationCode();
+        $data['activation_code'] = '008917';
         $data['is_admin'] = User::IS_ADMIN;
         $data['country'] ='Nigeria';
 
         $client = User::create($data);
         $data=array(
             'user'=>$client,
-            'status'=>200,
+            'status'=>true,
         );
-        return $this->saves($client);
+        return $this->saves($data);
+       }else{
+        return $this->errorResponse('User already exist!', 401);
+       }
 
     }
 
