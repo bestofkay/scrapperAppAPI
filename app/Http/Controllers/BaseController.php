@@ -15,7 +15,7 @@ class BaseController extends Controller
     private function successResponse($data, $code)
 
     {
-        return response()->json($data, $code);
+        return response()->json([$data, 'status'=>true], $code);
 
     }
 
@@ -41,7 +41,7 @@ class BaseController extends Controller
     }
 
     protected function saves($array, $code=201){
-        return $this->successResponse(['data'=>$array], $code);
+        return $this->successResponse($array, $code);
     }
 
     protected function showMessage($message, $code=201){

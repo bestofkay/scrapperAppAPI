@@ -97,7 +97,6 @@ class UserController extends BaseController
         $client = User::create($data);
         $data=array(
             'user'=>$client,
-            'status'=>true,
         );
         return $this->saves($data);
        }else{
